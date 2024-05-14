@@ -91,7 +91,7 @@ smbmap -u username -p "" -d . -H IP_addr
 - -H = Host IP address
 
 ```
-smbmap -u administrator -p smbserver_771 -H IP_addr -x "ipconfig"
+smbmap -u administrator -p password -H IP_addr -x "ipconfig"
 ```
 - -x = command to execute
   
