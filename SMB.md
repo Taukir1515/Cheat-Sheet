@@ -127,13 +127,13 @@ smbmap -u administrator -p password -H IP_addr --download "C$\flag.txt"
 
 
 # SMB - Samba 1
-* Always check both TCP and UDP ports using Nmap *
+- Always check both TCP and UDP ports using Nmap
 
 ### Nmap Scripts: SMB-os-discovery
 ### Metasploit Script: auxiliary/scanner/smb/smb_version
 ### nmblookup: 
-• nmblookup –h
-• nmblookup -A IP_addr
+	nmblookup –h
+	nmblookup -A IP_addr
 ### smbclient: 
 ```
 smbclient -h
@@ -143,110 +143,128 @@ smbclient -L IP_addr -N
 - -N = Null Session = No password
 
 ### rpcclient:
-• rpcclient -h
-• rpcclient -U "" -N IP_addr
+	rpcclient -h
+	rpcclient -U "" -N IP_addr
 - -U= Username
 - -N= Null Session= No Password
 
 
-SMB - Samba 2
- rpcclient:
-•	rpcclient -U "" -N IP_addr
-After connecting to rpcclient:
-•	? 		  	  <<< help
-•	srvinfo
-•	enumdomusers  	  <<< getting user list
-•	lookupnames username  <<< Get full SID of admin
-•	exit
+# SMB - Samba 2
+### rpcclient:
+	rpcclient -U "" -N IP_addr
+### After connecting to rpcclient:
+- ? 		  	  <<< help
+- srvinfo
+- enumdomusers  	  <<< getting user list
+- lookupnames username    <<< Get full SID of admin
+- exit
 
-enum4linux:
+### enum4linux:
 •	enum4linux -h
 •	enum4linux -o IP_addr
 		-o = Get OS information
 •	enum4linux -U IP_addr
 		- U = Get user list
 
- smbclient:
-•	smbclient -L IP_addr -N
+### smbclient:
+- smbclient -L IP_addr -N
+
+### Nmap Script:
+- smb-protocols
+- smb-enum-users
+
+### Metasploit:
+- auxiliary/scanner/smb/smb2
 
 
-Nmap Script:
-•	smb-protocols
-•	smb-enum-users
-
- Metasploit:
-•	auxiliary/scanner/smb/smb2
-
-
-SMB - Samba 3
+# SMB - Samba 3
  
-Nmap script:
-•	smb-enum-shares
+### Nmap script:
+- smb-enum-shares
 
-Metasploit:
-•	auxiliary/smb/smb_enumshares
+### Metasploit:
+- auxiliary/smb/smb_enumshares
 
-enum4linux:
-•	enum4linux -S IP_addr
- 		-S =Share information
-•	enum4linux -G IP_addr
-		-G = Group Information
-•	enum4linux -i IP_addr
-	-i = network interface
+### enum4linux:
+```
+enum4linux -S IP_addr
+```
+- -S =Share information
+```
+enum4linux -G IP_addr
+```
+- -G = Group Information
+```
+enum4linux -i IP_addr
+```
+- -i = network interface
+
+### smbclient:
+```
+smbclient -L IP_addr -N
+```
+- -L = IP list
+- -N= Null session (No password)
+
+#### Getting connection:
+```
+smbclient //IP_addr/Public -N
+```
+	help
+	ls
+	cd
+	get  >>> to download a file
+	exit
+
+### rpcclient:
+```
+rpcclient -U "" -N IP_addr
+```
+#### After connecting...
+	enumdomgroups
+
+# SMB Dictionary Attack
 
 
- smbclient:
-•	smbclient -L IP_addr -N
-		-L = IP list
-		-N= Null session (No password)
+### Metasploit:
+- auxiliary/scanner/smb/smb_login
+	- wordlist >> /usr/share/wordlists/metasploit/unix_passwords.txt
 
-Getting connection:
-•	smbclient //IP_addr/Public -N
-	help
-	ls
-	cd
-	get  >>> to download a file
-	exit
-
-rpcclient:
-•	rpcclient -U "" -N IP_addr
-
-After connecting...
-	enumdomgroups
-
-SMB Dictionary Attack
+### Hydra:
+- hydra -l admin -P /usr/share/wordlists/rockyou.txt IP_addr smb 
 
 
-Metasploit:
-•	auxiliary/scanner/smb/smb_login
-	wordlist >> /usr/share/wordlists/metasploit/unix_passwords.txt
+### smbmap >> To Login Access
+```
+smbmap -H IP-addr -u admin -P password
+```
 
-Hydra:
-•	hydra -l admin -P /usr/share/wordlists/rockyou.txt IP_addr smb 
+### smbclient  >> To see any shares are browse-able
+```
+smbclient -L IP_addr -U username
+```
+```
+smbclient //IP_addr/username -U username
+```
+	help
+	ls
+	get
+	exit
 
+# PIPE
+	The way the services talk to each other is through pipes.
+	Named pipes are pipes that are known.
+	If we get into SMB, there is a chance that we can get into other services that are piped through it. 
 
-smbmap >> To Login Access
-•	smbmap -H IP-addr -u admin -P password
-
- smbclient  >> To see any shares are browse-able
-•	smbclient -L IP_addr -U username
-•	smbclient //IP_addr/username -U username
-o	help
-o	ls
-o	get
-o	exit
-
-PIPE
-The way the services talk to each other is through pipes.
-Named pipes are pipes that are known.
-If we get into SMB, there is a chance that we can get into other services that are piped through it. 
-
-Metasploit:
-•	auxiliary/scanner/smb/pipe_auditor
-
-enum4linux:
-•	enum4linux -r -u "admin" -p "password" IP_addr
-		-r = User's SID
+### Metasploit:
+```
+auxiliary/scanner/smb/pipe_auditor
+```
+### enum4linux:
+```
+enum4linux -r -u "admin" -p "password" IP_addr
+```
+	-r = User's SID
 
 
 
