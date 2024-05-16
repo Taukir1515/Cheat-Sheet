@@ -98,6 +98,7 @@ smb-enum-shares,smb-ls --script-args smbusername=administrator,smbpassword=passw
 # nmblookup
 	nmblookup –h
 	nmblookup -A IP_addr
+ 			>> -A= to find the NetBIOS name associated with the IP address
 
  
 # SMBMap
