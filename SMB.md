@@ -1,4 +1,4 @@
-# Windows Discover & Mount
+# General
 - SMB= Server Message Block
 - SMB is a Windows implementation of a file-sharing
 - SMB uses ports 139 or 445
